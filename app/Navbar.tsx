@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { AiFillCamera } from 'react-icons/ai';
 
 
 const Navbar = () => {
@@ -15,7 +16,7 @@ const Navbar = () => {
   ];
   return (
     <nav className="flex border-b h-14 items-center space-x-6 p-4">
-      <Link href={"/"}>Logo</Link>
+      <Link href={"/"}><AiFillCamera/></Link>
       <ul className="flex space-x-6 ">
         {links.map((link) => (
           
