@@ -12,9 +12,9 @@
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;  /* RGB for black */
-  --background-start-rgb: 255, 255, 255; /* RGB for white */
-  --background-end-rgb: 255, 255, 255; /* RGB for white */
+  --foreground-rgb: 255, 255,255; 
+  --background-start-rgb: 0, 0, 0; 
+  --background-end-rgb: 0, 0, 0; 
 }
 
 body {
