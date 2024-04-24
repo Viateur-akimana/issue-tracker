@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { usePathname } from 'next/navigation';
 import classNames from "classnames";
-import { Button } from "@radix-ui/themes";
+
 
 const Navbar = () => {
   const links = [
@@ -24,9 +24,9 @@ const Navbar = () => {
   const currentPath = usePathname();
 
   return (
-    <nav className="flex justify-between items-center h-14 p-4">
-       <Link href="/" className="font-bold text-sm sm:text-base">Issue Tracker Pro</Link>
-       <ul className="flex  text-md justify-center space-x-4 sm:space-x-10">
+    <nav className="flex justify-between items-center h-14 p-4 m-10">
+       <Link href="/" className="font-bold sm:text-base mx-3 ">Issue Tracker Pro</Link>
+       <ul className="flex  text-xl justify-center space-x-4 sm:space-x-10">
         {links.map((link) => (
           <li key={link.href} className="list-none">
             <Link
