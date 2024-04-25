@@ -77,7 +77,7 @@ const IssueList = ({ issues }: IssueListProps) => {
             ))}
           </tbody>
         </table>
-        <div className='flex justify-center mt-10'><Button><Link href={'/api/issues/new'} className='bg-purple-500 text-white item-center font-bold py-2 px-4 rounded w-48' >New issue</Link> </Button></div>
+        <div className='flex justify-center mt-10'><Button><Link href={'/issues/issueList/new'} className='bg-purple-500 text-white item-center font-bold py-2 px-4 rounded w-48' >New issue</Link> </Button></div>
       </div>
     </div>
   );

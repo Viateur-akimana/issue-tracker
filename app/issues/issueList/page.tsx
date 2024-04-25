@@ -1,5 +1,5 @@
 import React from 'react';
-import IssueList from './page';
+import IssueList from '../../components/issueList';
 import Layout from '../../layout'
 
 
