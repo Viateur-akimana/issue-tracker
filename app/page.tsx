@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import groupImage from '../public/Device.png';
+import EnhancedProductivity from './pages/index';
 
 export default function Home() {
   return (
-    <main className='container mx-auto flex justify-center items-center h-screen'>
+    <main >
+      <div className='container mx-auto flex justify-center items-center h-screen'>
       <div className="text-center">
         <div>
           <h1 className="text-7xl font-italic my-6">Track Issues Seamlessly</h1>
@@ -27,6 +29,8 @@ export default function Home() {
           className="rounded-lg"
         />
       </div>
+      </div>
+      <EnhancedProductivity />
     </main>
   )
 }
