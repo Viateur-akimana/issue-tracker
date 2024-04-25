@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import groupImage from '../public/Device.png';
 import EnhancedProductivity from './pages/index';
+import Component from './components/page';
 
 export default function Home() {
   return (
@@ -30,6 +31,7 @@ export default function Home() {
         />
       </div>
       </div>
+      <Component/>
       <EnhancedProductivity />
     </main>
   )
