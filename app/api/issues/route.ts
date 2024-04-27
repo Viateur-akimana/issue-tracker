@@ -21,8 +21,10 @@ export async function POST(request: NextRequest) {
 }
 
 
-export async function GET(request: NextRequest) {
-    const body = await request.json();
+export async function GET() {
+    const user = await prisma.user.findUnique({
+        where:{id:Number(id)}
+    });
     const validation = await schema.safeParse(body);    
 
     if (!validation.success) {
