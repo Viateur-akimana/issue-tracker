@@ -13,12 +13,12 @@ const IssuesPage = () => {
       <p className="mb-8">Effortless issue management.</p>
       <div className="flex items-center justify-center">
         <div className="mr-8">
-          <Link href="#" className="flex items-center mb-4 text-purple-500 hover:text-purple-700">
+          <Link href="/issues/issueList/new" className="flex items-center mb-4 text-purple-500 hover:text-purple-700">
             <Image src={CreateIcon} alt="Create Issues" width={24} height={24} className="mr-2" />
             Create Issues
           </Link>
           <p className="mb-6">Report new issues with ease using our intuitive interface.</p>
-          <Link href="#" className="flex items-center mb-4 text-purple-500 hover:text-purple-700">
+          <Link href="" className="flex items-center mb-4 text-purple-500 hover:text-purple-700">
             <Image src={CreateIcon} alt="Video Issues" width={24} height={24} className="mr-2" />
             View Issues
           </Link>

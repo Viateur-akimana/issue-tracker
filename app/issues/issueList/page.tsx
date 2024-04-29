@@ -1,18 +1,35 @@
+'use client'
 import React from 'react';
 import IssueList from '../../components/issueList';
-import Layout from '../../layout'
+import Layout from '../../layout';
+import { GetServerSideProps } from 'next';
 
+type Issue = {
+  id: number;
+  title: string;
+  status: 'Open' | 'Closed';
+  assignee: string;
+};
 
-const mockIssues = [
-  { id: 1, title: 'Example Issue 1', status: 'Open', assignee: 'John Doe' },
-  { id: 2, title: 'Example Issue 2', status: 'Closed', assignee: 'Jane Smith' },
-  { id: 2, title: 'Example Issue 3', status: 'Closed', assignee: 'Viateur Salton' },
-];
+type HomePageProps = {
+  issues: Issue[];
+};
 
-const HomePage = () => (
+const HomePage: React.FC<HomePageProps> = ({ issues }) => (
   <Layout>
-    <IssueList issues={mockIssues} />
+    <IssueList issues={issues} />
   </Layout>
 );
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res = await fetch('http://localhost:3000/api/issues'); // Use the correct URL for your environment
+  const issues: Issue[] = await res.json();
+
+  return {
+    props: {
+      issues,
+    },
+  };
+};
 
 export default HomePage;

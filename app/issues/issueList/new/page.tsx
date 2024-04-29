@@ -19,7 +19,7 @@ const NewIssuePage = () => {
   const onSubmit: SubmitHandler<IssueForm> = async (data) => {
     try {
       await axios.post("http://localhost:3000/api/issues", data);
-      router.push("/issues");
+      router.push("/issues/issueList");
     } catch (error) {
       setError("Unexpected error");
     }
@@ -37,7 +37,7 @@ const NewIssuePage = () => {
         <div>
           <TextField.Root
             placeholder="Title"
-            className="w-full bg-black text-white border border-transparent focus:border-purple-500 hover:border-purple-500 rounded-md py- focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className=" bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             {...register("title")}
           />
         </div>
