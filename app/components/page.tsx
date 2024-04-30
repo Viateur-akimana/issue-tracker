@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 
 type Issue = {
   id: number;
@@ -15,6 +16,7 @@ interface IssueListProps {
 const IssueList: React.FC<IssueListProps> = ({ issues }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<keyof Issue | ''>('');
+  const [currentIssues, setIssues] = useState<Issue[]>(issues);
 
   const filteredAndSortedIssues = issues.filter(issue =>
     issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -26,6 +28,24 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
     if (a[sortBy] > b[sortBy]) return 1;
     return 0;
   });
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`/api/issues/${id}`);
+      setIssues((prevIssues: any[]) => prevIssues.filter(issue => issue.id !== id));
+    } catch (error) {
+      console.error('Error deleting issue:', error);
+    }
+  };
+
+  const handleEdit = async(issue: Issue) => {
+    try {
+      await axios.put(`/api/issues/${id}`);
+      Router.push(`/issues/${issue.id}/edit`);
+    } catch (error) {
+      console.error('Error deleting issue:', error);
+    }
+  };
 
   return (
     <div className="bg-black text-white min-h-screen p-4">
@@ -69,10 +89,10 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
               </td>
               <td className="px-4 py-2">{issue.description}</td>
               <td className="px-4 py-2 space-x-2">
-                <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded">
+                <button onClick={() => handleEdit(issue)}  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded">
                   Edit
                 </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                <button onClick={() => handleDelete(issue.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                   Delete
                 </button>
               </td>
@@ -82,7 +102,7 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
       </table>
       <div className="flex justify-center mt-10">
         <Link href="/issues/new" className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded w-1/ text-center block">
-            New Issue
+          New Issue
         </Link>
       </div>
     </div>
