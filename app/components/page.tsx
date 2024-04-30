@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
+import { useRouter } from 'next/navigation'
 
 type Issue = {
   id: number;
@@ -14,6 +15,7 @@ interface IssueListProps {
 }
 
 const IssueList: React.FC<IssueListProps> = ({ issues }) => {
+  const router= useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<keyof Issue | ''>('');
   const [currentIssues, setIssues] = useState<Issue[]>(issues);
@@ -28,24 +30,19 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
     if (a[sortBy] > b[sortBy]) return 1;
     return 0;
   });
-
   const handleDelete = async (id: number) => {
-    try {
-      await axios.delete(`/api/issues/${id}`);
-      setIssues((prevIssues: any[]) => prevIssues.filter(issue => issue.id !== id));
-    } catch (error) {
-      console.error('Error deleting issue:', error);
+    if (window.confirm('Are you sure you want to delete this issue?')) {
+      try {
+        await axios.delete(`/api/issues/${id}`);
+        setIssues(currentIssues => currentIssues.filter(issue => issue.id !== id));
+        router.refresh();
+      } catch (error) {
+        console.error('Error deleting issue:', error);
+        alert('Failed to delete the issue.');
+      }
     }
   };
-
-  const handleEdit = async(issue: Issue) => {
-    try {
-      await axios.put(`/api/issues/${id}`);
-      Router.push(`/issues/${issue.id}/edit`);
-    } catch (error) {
-      console.error('Error deleting issue:', error);
-    }
-  };
+  
 
   return (
     <div className="bg-black text-white min-h-screen p-4">
@@ -89,9 +86,7 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
               </td>
               <td className="px-4 py-2">{issue.description}</td>
               <td className="px-4 py-2 space-x-2">
-                <button onClick={() => handleEdit(issue)}  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded">
-                  Edit
-                </button>
+                <Link className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded" href={'/issues/edit'}>Edit</Link>
                 <button onClick={() => handleDelete(issue.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                   Delete
                 </button>
