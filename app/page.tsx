@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import groupImage from '../public/Device.png';
 import EnhancedProductivity from './pages/index';
-import Component from './components/page';
-
+import Component from './issues/new/enhanced';
 export default function Home() {
   return (
     <main >

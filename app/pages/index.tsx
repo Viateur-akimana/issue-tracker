@@ -1,5 +1,4 @@
 import React from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image'
 import google from '../../public/Google.png'
@@ -17,7 +16,7 @@ const Home: React.FC = () => (
   <div className=" bg-purple-900 flex flex-col items-center justify-center mt-6">
 
 
-    <main className="max-w-md mx-auto ">
+    <main className="max-w-md mx-auto ">    
       <div className="bg-black text-white p-8 rounded-lg my-8">
         <div className="relative">
           <Image
