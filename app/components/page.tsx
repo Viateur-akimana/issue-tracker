@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
 import axios from 'axios';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import Modal from './Modal'; 
+import Link from 'next/link';
+import { Button } from '@radix-ui/themes';
 
 type Issue = {
   id: number;
@@ -15,10 +17,14 @@ interface IssueListProps {
 }
 
 const IssueList: React.FC<IssueListProps> = ({ issues }) => {
-  const router= useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<keyof Issue | ''>('');
   const [currentIssues, setIssues] = useState<Issue[]>(issues);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [currentIssue, setCurrentIssue] = useState<Issue | null>(null);
+
+  const router = useRouter();
 
   const filteredAndSortedIssues = issues.filter(issue =>
     issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -30,22 +36,32 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
     if (a[sortBy] > b[sortBy]) return 1;
     return 0;
   });
-  const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this issue?')) {
+
+  const handleEdit = async () => {
+    if (currentIssue) {
       try {
-        await axios.delete(`/api/issues/${id}`);
-        setIssues(currentIssues => currentIssues.filter(issue => issue.id !== id));
+        await axios.put(`http://localhost:3000/api/issues/${currentIssue.id}`, currentIssue);
+        setEditModalOpen(false); 
         router.refresh();
       } catch (error) {
-        console.error('Error deleting issue:', error);
-        alert('Failed to delete the issue.');
+        console.error('Failed to update the issue:', error);
       }
     }
   };
-  
+
+  const handleDelete = async (id: number) => {
+    setDeleteModalOpen(false); 
+    try {
+      await axios.delete(`http://localhost:3000/api/issues/${id}`);
+      setIssues(currentIssues => currentIssues.filter(issue => issue.id !== id));
+      router.refresh(); 
+    } catch (error) {
+      console.error('Error deleting issue:', error);
+    }
+  };
 
   return (
-    <div className="bg-black text-white min-h-screen p-4">
+    <div className="bg-black text-white min-h-screen p-4 text-center">
       <div className="flex justify-between mb-4">
         <input
           type="text"
@@ -86,8 +102,10 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
               </td>
               <td className="px-4 py-2">{issue.description}</td>
               <td className="px-4 py-2 space-x-2">
-                <Link className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-1 px-2 rounded" href={'/issues/edit'}>Edit</Link>
-                <button onClick={() => handleDelete(issue.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                <button onClick={() => { setCurrentIssue(issue); setEditModalOpen(true); }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded">
+                  Edit
+                </button>
+                <button onClick={() => { setCurrentIssue(issue); setDeleteModalOpen(true); }} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
                   Delete
                 </button>
               </td>
@@ -95,11 +113,42 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
           ))}
         </tbody>
       </table>
-      <div className="flex justify-center mt-10">
-        <Link href="/issues/new" className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded w-1/ text-center block">
-          New Issue
-        </Link>
-      </div>
+      {editModalOpen && currentIssue && (
+        <Modal modalOpen={editModalOpen} setModalOpen={setEditModalOpen}>
+          <form onSubmit={(e) => { e.preventDefault(); handleEdit(); }}>
+            <h3>Edit Issue</h3>
+            <div>
+              <label>Title:</label>
+              <input type="text" value={currentIssue.title} onChange={(e) => setCurrentIssue({...currentIssue, title: e.target.value})} className="input bg-black border input-bordered w-full max-w-xs" />
+            </div>
+            <div>
+              <label className="bg-black">Status:</label>
+              <select value={currentIssue.status} onChange={(e) => setCurrentIssue({...currentIssue, status: e.target.value as 'Open' | 'Closed'})} className="select bg-black border select-bordered w-full max-w-xs">
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+            <div>
+              <label>Description:</label>
+              <textarea value={currentIssue.description} onChange={(e) => setCurrentIssue({...currentIssue, description: e.target.value})} className="textarea bg-black bordeer textarea-bordered w-full max-w-xs" />
+            </div>
+            <button type="submit" className="btn btn-primary border">Update</button>
+          </form>
+        </Modal>
+      )}
+      {deleteModalOpen && currentIssue && (
+        <Modal modalOpen={deleteModalOpen} setModalOpen={setDeleteModalOpen}>
+          <h3>Are you sure you want to delete this issue?</h3>
+          <button onClick={() => handleDelete(currentIssue.id)} className="btn btn-error">Delete</button>
+          <button onClick={() => setDeleteModalOpen(false)} className="btn btn-ghost">Cancel</button>
+        </Modal>
+      )}
+       <Button
+          className="bg-purple-500 item-center my-5 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+          type="submit"
+        >
+          Submit new issue
+        </Button>
     </div>
   );
 };
