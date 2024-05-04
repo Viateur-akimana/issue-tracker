@@ -1,28 +1,19 @@
 'use client'
 import { FormEvent } from 'react'
-import { signIn } from 'next-auth/react'
 import Image from 'next/image'
-import google from '../../public/Google.png'
+
 import image from '../../public/Image.png'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 export default function Form() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: formData.get('email'),
-          password: formData.get('password'),
-        }),
-      });
-      console.log(response);
-
-    } catch (error) {
-
-    }
+    signIn('credentials', {
+      email: formData.get('email'),
+      password: formData.get('password'),
+      redirect: false
+    })
   }
   return (
     <div className=" bg-purple-900 flex flex-col items-center justify-center mt-6">
@@ -36,7 +27,7 @@ export default function Form() {
           <h2 className="text-2xl font-bold mb-6 text-center">Join Now</h2>
           <p className="text-gray-400 mb-6 text-center">Start Tracking Today!</p>
         </div>
-        <Link href='../login' className='flex mx-auto justify-center text-purple-900'>Login here</Link>
+        <Link href='../register' className='flex mx-auto justify-center text-purple-900' >Register here</Link>
         <p className="text-gray-400 mb-4 text-center">or</p>
         <input
           type="email"
@@ -52,11 +43,8 @@ export default function Form() {
           autoComplete="off"
         />
         <button type='submit' className="w-1/2 mx-auto flex justify-center bg-purple-600 text-white py-2  rounded-md mb-4">
-          Register with Email
+          Login with credentials
         </button>
-        <p className="text-gray-400 text-sm text-center">
-          Accept our Terms and Privacy Policy
-        </p>
       </form>
     </div>
   )
