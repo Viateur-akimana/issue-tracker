@@ -1,7 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
-// import GitHubProvider from 'next-auth/providers/github';
+import GitHubProvider from 'next-auth/providers/github';
 import Credentials from "next-auth/providers/credentials";
-// import GoogleProvider from 'next-auth/providers/google';
+import GoogleProvider from 'next-auth/providers/google';
 import prisma from "@/prisma/client";
 import { compare } from "bcrypt";
 
@@ -14,10 +14,10 @@ export const options: NextAuthOptions = {
     signIn: '/login'
   },
   providers: [
-    // GoogleProvider({
-    //     clientId: process.env.GOOGLE_CLIENT_ID as string,
-    //     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    // }),
+    GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
     Credentials({
       name: "Credentials",
       credentials: {
